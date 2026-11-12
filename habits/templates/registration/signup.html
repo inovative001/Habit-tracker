@@ -1,0 +1,32 @@
+{% extends 'habits/base.html' %}
+
+{% block content %}
+    <div class="auth-page">
+        <section class="auth-card">
+            <h2>Create an account</h2>
+            <p class="auth-subtitle">Join us and start tracking your habits today.</p>
+            <form method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="non-field-errors">{{ form.non_field_errors }}</div>
+                {% endif %}
+                {% for field in form %}
+                    <div class="auth-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="field-errors">{{ field.errors }}</div>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit">Create Account</button>
+            </form>
+            <p class="auth-footer">
+                Already have an account? <a href="{% url 'login' %}">Log In</a>
+            </p>
+        </section>
+    </div>
+{% endblock %}

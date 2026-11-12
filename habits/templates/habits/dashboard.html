@@ -1,0 +1,113 @@
+{% extends 'habits/base.html' %}
+
+{% block content %}
+    <!-- Top Navbar -->
+    <header class="dashboard-nav">
+        <div class="dashboard-brand">
+            <h1>Habit Tracker</h1>
+        </div>
+        <div class="dashboard-actions">
+            <span class="welcome">Welcome, {{ request.user.username }}</span>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button class="btn-logout" type="submit">Log Out</button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Add Habit Form -->
+    <section class="card add-habit-card">
+        <h2>Add a New Habit</h2>
+        <form method="post" action="{% url 'dashboard' %}">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Enter habit name (e.g. Read 20 pages)" required>
+            <button type="submit">Add Habit</button>
+        </form>
+    </section>
+
+    <!-- Daily Tracking -->
+    <section class="card tracking-card">
+        <div class="tracking-header">
+            <h2>Daily Tracking</h2>
+            <form method="get" action="{% url 'dashboard' %}" class="date-form">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" value="{{ selected_date }}">
+                <button type="submit">Go</button>
+            </form>
+        </div>
+        <p class="date-display">Tracking for: <strong>{{ selected_date }}</strong></p>
+
+        {% if habit_data %}
+            <ul class="habit-grid">
+                {% for item in habit_data %}
+                    <li class="habit-card">
+                        <div class="habit-header">
+                            <span class="habit-name">{{ item.habit.name }}</span>
+                            <span class="habit-status">
+                                {% if item.entry %}
+                                    {% if item.entry.status == 'done' %}Done{% else %}Missed{% endif %}
+                                {% else %}Not tracked{% endif %}
+                            </span>
+                        </div>
+
+                        <div class="habit-actions">
+                            {% if item.entry %}
+                                {% if item.entry.status == 'done' %}
+                                    <form method="post" action="{% url 'toggle_status' item.habit.id selected_date 'missed' %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button class="btn btn-done active" type="submit">&#10003;</button>
+                                    </form>
+                                    <form method="post" action="{% url 'toggle_status' item.habit.id selected_date 'done' %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button class="btn btn-missed" type="submit">&#10007;</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" action="{% url 'toggle_status' item.habit.id selected_date 'done' %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button class="btn btn-done" type="submit">&#10003;</button>
+                                    </form>
+                                    <form method="post" action="{% url 'toggle_status' item.habit.id selected_date 'missed' %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button class="btn btn-missed active" type="submit">&#10007;</button>
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                <form method="post" action="{% url 'toggle_status' item.habit.id selected_date 'done' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button class="btn btn-done" type="submit">&#10003;</button>
+                                </form>
+                                <form method="post" action="{% url 'toggle_status' item.habit.id selected_date 'missed' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button class="btn btn-missed" type="submit">&#10007;</button>
+                                </form>
+                            {% endif %}
+                        </div>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <span class="stat-value">{{ item.total_done }}</span>
+                                <span class="stat-label">Kept (✓)</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">{{ item.total_missed }}</span>
+                                <span class="stat-label">Missed (✗)</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">{{ item.week_count }}</span>
+                                <span class="stat-label">This Week</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">{{ item.month_count }}</span>
+                                <span class="stat-label">This Month</span>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-state">
+                <p>No habits yet. Add your first habit above to get started!</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

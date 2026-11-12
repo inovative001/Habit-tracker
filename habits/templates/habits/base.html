@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <link rel="stylesheet" href="{% static 'habits/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Habit Tracker</h1>
+            <nav>
+                {% if user.is_authenticated %}
+                    <span style="color:#6e6e73;font-size:14px;margin-right:16px;">Hi, {{ user.username }}</span>
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'logout' %}">Log Out</a>
+                {% else %}
+                    <a href="{% url 'signup' %}">Sign Up</a>
+                    <a href="{% url 'login' %}">Log In</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

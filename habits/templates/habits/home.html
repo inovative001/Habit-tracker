@@ -1,0 +1,33 @@
+{% extends 'habits/base.html' %}
+
+{% block content %}
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Build better habits, one day at a time.</h1>
+            <p class="hero-sub">Track your daily progress with done or missed marks, and review your weekly and monthly streaks. Stay consistent, stay motivated.</p>
+
+            <div class="hero-cta" style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+                <a href="{% url 'signup' %}" class="btn-primary">Sign Up</a>
+                <a href="{% url 'login' %}" class="btn-secondary">Log In</a>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">✓</span>
+                <h3>Daily Tracking</h3>
+                <p>Mark each habit as done or missed every day.</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">📊</span>
+                <h3>Weekly &amp; Monthly</h3>
+                <p>Review your streaks and progress over time.</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🎯</span>
+                <h3>Stay Consistent</h3>
+                <p>Build momentum and keep your habits alive.</p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
